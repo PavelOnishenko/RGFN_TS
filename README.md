@@ -2,6 +2,13 @@
 
 Standalone turn-based RPG with overworld, village, quest, and battle systems.
 
+## Godot + C# development plan
+
+The migration vision, shared-repository layout, small-step agent workflow, and
+current work state are documented in [docs/godot-migration/README.md](docs/godot-migration/README.md).
+The TypeScript version remains at the repository root while the new version is
+planned under `game/`.
+
 ## Repository extraction
 
 Move this directory's contents to the new repository root, including hidden `.github/` and `.gitignore`. Do not transfer generated `node_modules/`, `dist/`, or `deploy/` directories.
