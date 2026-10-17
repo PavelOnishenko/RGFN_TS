@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import TurnManager from '../../dist/systems/combat/TurnManager.js';
 import { createCombatEntity } from '../helpers/testUtils.js';
 
+// Migration TURN-001: implemented in game/tests/Rgfn.Core.Tests/Combat/TurnManagerTests.cs.
+// Coverage boundaries and review: docs/godot-migration/TEST-MAP.md.
 test('TurnManager initializes turns with only active living entities', () => {
   const tm = new TurnManager();
   const player = createCombatEntity('Player', 1, 1, false);

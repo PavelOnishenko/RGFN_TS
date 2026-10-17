@@ -17,6 +17,8 @@ export default class TurnManager {
         this.waitingForPlayer = false;
     }
 
+    // Migration TURN-001: only the tested current-participant/player-turn initialization slice.
+    // Partial coverage: docs/godot-migration/TEST-MAP.md; this whole method is not migrated.
     public initializeTurns(entities: CombatEntity[], teams?: { player: CombatEntity; allies?: CombatEntity[]; enemies?: CombatEntity[] }): void {
         this.entities = entities.filter(e => e.active && !e.isDead());
         this.currentTurnIndex = 0;
