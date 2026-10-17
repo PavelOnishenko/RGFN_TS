@@ -13,7 +13,8 @@
 
 ## Целевая схема
 
-Это план размещения. Перечисленных новых проектов сейчас ещё нет.
+Созданы game/core/Rgfn.Core.csproj, game/tests/Rgfn.Core.Tests/Rgfn.Core.Tests.csproj
+и game/global.json для первого теста. Остальная схема — план размещения.
 Пустые папки и заранее придуманные классы создавать не требуется.
 
 ```text
@@ -59,6 +60,11 @@
 и NUnit со средствами запуска фиксируются в BOOT-001 по фактической совместимости.
 Тестовый фреймворк уже выбран пользователем: NUnit (решение D-007).
 
+Для TURN-001 фактически проверены SDK 8.0.425, target framework net8.0,
+NUnit 4.6.1, NUnit3TestAdapter 5.0.0 и Microsoft.NET.Test.Sdk 17.14.1.
+SDK закреплён в game/global.json с rollForward=latestPatch.
+Проверка сборки Godot .NET и экспорта остаётся отдельной частью BOOT-001.
+
 ## Почему core и tests находятся вне Godot-проекта
 
 Godot импортирует содержимое своей папки, а C# SDK включает исходники по правилам
@@ -98,7 +104,8 @@ Rgfn.Core.Tests -> Rgfn.Core
 ассеты, настройки импорта рядом с ассетами и генерируемые выбранной версией Godot
 UID-файлы. Кеш импорта не заменяет настройки импорта.
 
-Отдельной bootstrap-задачей добавить точечные исключения .gitignore для:
+В TURN-001 добавлены исключения .NET bin/obj и work/artifacts. При подключении
+Godot отдельным шагом дополнить точечные исключения .gitignore для:
 
 - game/godot/.godot/;
 - bin/ и obj/ проектов .NET;
@@ -111,9 +118,30 @@ UID-файлы. Кеш импорта не заменяет настройки �
 ## Запуск, тесты и CI
 
 Текущая версия продолжает использовать npm run build, npm test и существующий
-веб-deploy. Будущие команды новой версии документируются после появления файлов:
-dotnet build для конкретных проектов, dotnet test для тестов ядра,
-запуск game/godot/project.godot в закреплённой Godot .NET.
+веб-deploy. Для новых проектов из папки game/:
+
+```sh
+dotnet build core/Rgfn.Core.csproj
+dotnet test tests/Rgfn.Core.Tests/Rgfn.Core.Tests.csproj
+```
+
+В текущем облачном окружении SDK установлен в игнорируемый work/tools/dotnet/.
+Из корня репозитория его можно подключить к текущему shell:
+
+```sh
+export PATH="$PWD/work/tools/dotnet:$PATH"
+export DOTNET_CLI_HOME="$PWD/work/dotnet-cli"
+export NUGET_PACKAGES="$PWD/work/nuget"
+cd game
+dotnet test tests/Rgfn.Core.Tests/Rgfn.Core.Tests.csproj
+```
+
+На машине с установленным совместимым SDK локальная установка в work/ не нужна.
+Установщик: https://dot.net/v1/dotnet-install.sh с --channel 8.0 и
+--install-dir work/tools/dotnet --no-path. Этот каталог и кеши не хранятся в Git.
+В окружении с ограниченным networking dotnet test требует разрешённого сетевого
+доступа для первого restore и локального соединения VSTest с test host.
+Godot-сцены и команды их запуска пока не созданы.
 
 Не приводить отсутствующую команду как уже прошедшую проверку. Для каждой команды
 указывать рабочую папку. Путь сохранений в Godot — пользовательское хранилище
